@@ -5,6 +5,8 @@ export class MainScene extends Phaser.Scene {
     height;
     width;
     grass = [];
+    initGrassPosition = 200;
+    space_between_grass = [290, 435];
     initCameraScrollX; 
 
     constructor(){
@@ -20,9 +22,12 @@ export class MainScene extends Phaser.Scene {
     
     update(){
         this.player.setVelocityX(0);
-        if (this.camera.scrollX % (this.width - this.initCameraScrollX) == 0){
-            console.log("Scroll: "+this.camera.scrollX);
-        }
+
+        this.grass.forEach((grass) => {
+            if (this.player.x - grass.x  === 300){
+                this.resetGrass(grass);
+            }
+        });
     
         if (this.cursors.right.isDown){
             this.player.setVelocityX(300);
@@ -58,10 +63,24 @@ export class MainScene extends Phaser.Scene {
     // }
 
     setGrass(){
+        let temp_grass; 
+
         for (let i = 0; i < 3; i++){
-            let temp_grass = this.physics.add.sprite((this.width - 33), (this.height/2) + 300, 'grass-'+this.getRandomInt(1, 3));
+            if (i == 0){
+                temp_grass = this.physics.add.sprite(this.initGrassPosition, (this.height/2) + 300, 'grass-'+this.getRandomInt(1, 3));
+            }else {
+                temp_grass = this.physics.add.sprite(
+                    (this.grass[this.grass.length-1].x) + this.space_between_grass[this.getRandomInt(0, 2)], 
+                    (this.height/2) + 300, 
+                    'grass-'+this.getRandomInt(1, 3));
+            }
             this.grass.push(temp_grass);
         }
+    }
+
+    resetGrass(grass){
+        grass.x = (this.grass[this.grass.length-1].x) + this.space_between_grass[this.getRandomInt(0, 2)];
+        grass.setTexture('grass-'+this.getRandomInt(1, 3));
     }
 
     gameOver(){
