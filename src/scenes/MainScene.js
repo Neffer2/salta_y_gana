@@ -31,16 +31,9 @@ export class MainScene extends Phaser.Scene {
     }
     
     update(){
-        this.grass.forEach((grass) => {
-            // if (grass.key == 0){
-            //     console.log("grass x: "+grass.x);
-            //     console.log("Player x: "+this.player.x);
-            // }
-            if (this.player.x - grass.x  >= 290){
-                console.log("grass reset"); 
-                this.resetGrass(grass);
-            }
-        });
+        if (this.player.x - this.grass[0].x  >= 290){
+            this.resetGrass(this.grass[0]);
+        }
     }
     
     init(){
@@ -53,7 +46,7 @@ export class MainScene extends Phaser.Scene {
         this.doubleJumpBtn = this.add.image((this.width/2) + 150, (this.height - 150), 'play-btn').setScale(.5).setInteractive().setScrollFactor(0);
         this.setGrass();
         this.camera = this.cameras.main;
-        this.camera.startFollow(this.player, true, .5, 1, -(this.player.x), 100);
+        this.camera.startFollow(this.player, true, .1, 1, -(this.player.x + 80), 100);
     }
 
     getRandomInt(min, max) {
@@ -74,7 +67,7 @@ export class MainScene extends Phaser.Scene {
     setGrass(){
         let temp_grass; 
 
-        for (let i = 0; i < 3; i++){
+        for (let i = 0; i < 5; i++){
             if (i == 0){
                 temp_grass = this.physics.add.sprite(this.initGrassPosition, (this.height/2) + 300, 'grass-'+this.getRandomInt(1, 3));
                 temp_grass.key = i;
@@ -90,18 +83,10 @@ export class MainScene extends Phaser.Scene {
     }
 
     resetGrass(grass){
-        this.grass[this.grass.length-1].setTint(0xff0000);
-        setTimeout(() => {
-            this.grass[this.grass.length-1].setTint(0x000000);
-        }, 1000);  
         grass.x = (this.grass[this.grass.length-1]).x + this.space_between_grass[this.getRandomInt(0, 2)];
         grass.setTexture('grass-'+this.getRandomInt(1, 3));
 
         this.swap(this.grass, grass.key, this.grass[this.grass.length-1].key);
-
-        this.grass.forEach((grass) => {
-            console.log(grass.key);
-        });
     }
 
     swap(arr, index1, index2) {
