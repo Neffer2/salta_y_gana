@@ -33,7 +33,7 @@ export class MainScene extends Phaser.Scene {
     }
     
     update(){
-        if (this.player.x - this.grass[0].x  >= 290){
+        if (this.player.x - this.grass[0].x  >= 200){
             this.resetGrass(this.grass[0]);
         }
 
