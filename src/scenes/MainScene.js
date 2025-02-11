@@ -50,7 +50,7 @@ export class MainScene extends Phaser.Scene {
         this.doubleJumpBtn = this.add.image((this.width/2) + 150, (this.height - 150), 'play-btn').setScale(.5).setInteractive().setScrollFactor(0);
         this.setGrass();
         this.camera = this.cameras.main;
-        this.camera.startFollow(this.player, true, .1, .0000001, -(this.player.x + 80), 100);
+        this.camera.startFollow(this.player, true, .05, .0000001, -(this.player.x + 80), 100);
     }
 
     getRandomInt(min, max) {
