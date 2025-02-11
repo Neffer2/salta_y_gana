@@ -33,7 +33,9 @@ export class MainScene extends Phaser.Scene {
     }
     
     update(){
-        if (this.player.x - this.grass[0].x  >= 200){
+        console.log(this.player.x - this.grass[0].x);
+
+        if (this.player.x - this.grass[0].x >= 435){
             this.resetGrass(this.grass[0]);
         }
 
@@ -51,6 +53,7 @@ export class MainScene extends Phaser.Scene {
         this.setGrass();
         this.camera = this.cameras.main;
         this.camera.startFollow(this.player, true, .05, .0000001, -(this.player.x + 80), 100);
+        // this.camera.startFollow(this.player, true, .05, .0000001, 0, 100);
     }
 
     getRandomInt(min, max) {
@@ -71,7 +74,7 @@ export class MainScene extends Phaser.Scene {
     setGrass(){
         let temp_grass; 
 
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < 3; i++){
             if (i == 0){
                 temp_grass = this.physics.add.sprite(this.initGrassPosition, (this.height/2) + 300, 'grass-'+this.getRandomInt(1, 3));
                 temp_grass.key = i;
