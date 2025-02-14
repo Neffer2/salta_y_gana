@@ -13,11 +13,12 @@ export class PreloadScene extends Phaser.Scene {
         this.load.image('grass-3', 'generic-png/env/grass_3.png');
 
         // Sounds
-        // this.load.audio('sound-back', 'music/hackbeat.mp3');
-        // this.load.audio('sound-hit', 'music/sheep-hit.wav');
+        this.load.audio('sound-back', 'music/hackbeat.mp3');
+        this.load.audio('jump', 'music/jump.wav');
+        this.load.audio('fall', 'music/fall.wav');
     }    
  
     create(){
-        this.scene.start('MainScene');   
+        this.scene.start('MenuScene');   
     }
 }

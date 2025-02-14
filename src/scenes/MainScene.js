@@ -14,6 +14,10 @@ export class MainScene extends Phaser.Scene {
     scoreCounter = 0;
     timer = 30;
     gameOVer = false; 
+    jumpSound;
+    fallSound;
+    allowFallSound = true;
+    timeInterval;
 
     constructor(){
         super('MainScene');
@@ -27,6 +31,7 @@ export class MainScene extends Phaser.Scene {
 
         this.singleJumpBtn.on('pointerdown', () => {
             if (!this.gameOVer){
+                this.jumpSound.play();
                 this.player.x += 290;
                 this.scoreCounter++;
                 this.scoreText.setText(this.scoreCounter);
@@ -35,6 +40,7 @@ export class MainScene extends Phaser.Scene {
 
         this.doubleJumpBtn.on('pointerdown', () => {
             if (!this.gameOVer){
+                this.jumpSound.play();
                 this.player.x += 435;
                 this.scoreCounter++;
                 this.scoreText.setText(this.scoreCounter);
@@ -49,8 +55,13 @@ export class MainScene extends Phaser.Scene {
             this.resetGrass(this.grass[0]);
         }
 
-        this.player.setVelocityY(900);
-        if (this.player.y > 797.5){
+        if (!this.gameOVer){
+            this.player.setVelocityY(900);
+        }
+        
+        if (this.player.y > ((this.height/2) + 160)){
+            (this.allowFallSound) ? this.fallSound.play() : null;
+            this.allowFallSound = false;
             this.gameOver();   
         }
     }
@@ -71,6 +82,9 @@ export class MainScene extends Phaser.Scene {
         this.setGrass();
         this.camera = this.cameras.main;
         this.camera.startFollow(this.player, true, .05, .0000001, -(this.player.x + 80), 100);
+
+        this.jumpSound = this.sound.add('jump', { loop: false });
+        this.fallSound = this.sound.add('fall', { loop: false });
     }
 
     getRandomInt(min, max) {
@@ -78,11 +92,11 @@ export class MainScene extends Phaser.Scene {
     } 
 
     setTimer(){
-        let timeInterval = setInterval(() => {
+        this.timeInterval = setInterval(() => {
             this.timer--;
             if (this.timer < 10){ this.scoreTimer.setText(":0"+this.timer);}else {this.scoreTimer.setText(":"+this.timer);}
             if(this.timer == 0){
-                clearInterval(timeInterval);
+                clearInterval(this.timeInterval);
                 this.gameOver();
             }
         }, 1000);
@@ -123,7 +137,10 @@ export class MainScene extends Phaser.Scene {
 
     gameOver(){
         this.gameOVer = true;
-        setTimeout(() => {location.reload();}, 2000);
-        // mContext.scene.start('GameOverScene', {score: scoreCounter});
+        clearInterval(this.timeInterval);
+        setTimeout(() => {
+            this.scene.stop('MainScene');
+            this.scene.start('GameOverScene', {score: this.scoreCounter});
+        }, 2000);
     }
 } 

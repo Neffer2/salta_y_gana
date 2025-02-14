@@ -29,6 +29,7 @@ export class MenuScene extends Phaser.Scene {
 
     playMusic(){
         let backgroundMusic = this.sound.add('sound-back', { loop: true });
+        backgroundMusic.volume = 0.2;
         backgroundMusic.play();
     }
 }
