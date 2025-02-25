@@ -27,4 +27,4 @@ const config = {
 }
 
 // Inicializacion del objeto
-export const game = new Phaser.Game(config)
+export const game = new Phaser.Game(config) 
