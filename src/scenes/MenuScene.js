@@ -13,8 +13,9 @@ export class MenuScene extends Phaser.Scene {
         this.playMusic();
         width = this.game.config.width;
         height = this.game.config.height;
-        this.add.image(0, 0, 'background').setScale(0.8).setOrigin(0, 0);
-        let playButton = this.add.image(width/2, height/2, 'play-btn').setInteractive();
+        this.add.image(0, 0, 'menu-background').setOrigin(0, 0);
+        this.add.image((width/2), ((height/2) - 200), 'menu-title').setOrigin(0.5);
+        let playButton = this.add.image(width/2, (height/2 + 150), 'play-btn').setInteractive();
         playButton.on('pointerdown', () => {
             playButton.setScale(.8);
             setTimeout(() => {

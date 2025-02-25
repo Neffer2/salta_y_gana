@@ -5,12 +5,20 @@ export class PreloadScene extends Phaser.Scene {
 
     preload(){
         this.load.setPath('public/assets');
-        this.load.image('background', 'generic-png/env/background_tall.png');
-        this.load.image('player', 'generic-png/characters/white_sheep.png');
-        this.load.image('play-btn', 'buttons/Play.png');
-        this.load.image('grass-1', 'generic-png/env/grass_1.png');
-        this.load.image('grass-2', 'generic-png/env/grass_2.png');
-        this.load.image('grass-3', 'generic-png/env/grass_3.png');
+        // Menu
+        this.load.image('menu-background', './menu/back.jpg');
+        this.load.image('menu-title', 'menu/title.png'); 
+        this.load.image('play-btn', 'buttons/play.png');
+
+        // Main scene
+        this.load.image('grass-1', 'env/grass_1.png');
+        this.load.image('background', 'env/background_tall.png');
+        this.load.image('single-jump', 'buttons/1jump.png');
+        this.load.image('double-jump', 'buttons/2jump.png');
+        this.load.spritesheet('player', 'characters/capibara.png', { frameWidth: 183.75, frameHeight: 217.3 });  
+
+        // Game Over
+        this.load.image('game-over-title', 'game_over/title.png');
 
         // Sounds
         this.load.audio('sound-back', 'music/hackbeat.mp3');
