@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'LuckiestGuy';
+    src: url('../public/fonts/LuckiestGuy-Regular.ttf') format('truetype');
+}  
+
 * {
     margin: 0;
     padding: 0;
@@ -10,6 +15,7 @@ html, body {
 
 body {
     background-color: #000;
+    font-family: 'LuckiestGuy', sans-serif;
 }
 
 canvas {

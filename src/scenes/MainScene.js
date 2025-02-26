@@ -18,6 +18,7 @@ export class MainScene extends Phaser.Scene {
     fallSound;
     allowFallSound = true;
     timeInterval;
+    lives = [];
 
     constructor(){
         super('MainScene');
@@ -28,8 +29,10 @@ export class MainScene extends Phaser.Scene {
     create(){
         this.initCameraScrollX = this.camera.scrollX;
         this.setTimer();
+        this.getLives();    
 
         this.singleJumpBtn.on('pointerdown', () => {
+            this.singleJumpBtn.setScale(.8);
             if (!this.gameOVer){
                 this.player.anims.play('jump', true);
                 this.jumpSound.play();
@@ -39,7 +42,12 @@ export class MainScene extends Phaser.Scene {
             }
         });
 
+        this.singleJumpBtn.on('pointerup', () => {
+            this.singleJumpBtn.setScale(1);
+        });
+
         this.doubleJumpBtn.on('pointerdown', () => {
+            this.doubleJumpBtn.setScale(.8);
             if (!this.gameOVer){
                 this.player.anims.play('jump', true);
                 this.jumpSound.play();
@@ -47,6 +55,10 @@ export class MainScene extends Phaser.Scene {
                 this.scoreCounter++;
                 this.scoreText.setText(this.scoreCounter);
             }
+        });
+
+        this.doubleJumpBtn.on('pointerup', () => {
+            this.doubleJumpBtn.setScale(1);
         });
 
         this.physics.add.collider(this.player, this.grass);
@@ -62,28 +74,43 @@ export class MainScene extends Phaser.Scene {
         }
         
         if (this.player.y > 871.5){
-            (this.allowFallSound) ? this.fallSound.play() : null;
-            this.allowFallSound = false;
-            this.gameOver();   
+            if (this.player.lives > 0 && this.allowFallSound){
+                this.fallSound.play()
+                this.player.lives--;
+                this.allowFallSound = false;
+                this.resetGame();
+                this.getLives();
+
+                setTimeout(() => {
+                    this.allowFallSound = true;
+                }, 1000);
+            }else if (this.player.lives === 0 && this.allowFallSound){
+                this.fallSound.play()
+                this.allowFallSound = false;
+                this.gameOver();
+            }
         }
     }
     
     init(){
         this.height = this.sys.game.config.height;
         this.width = this.sys.game.config.width;
-        this.add.image(0, 0, 'background').setScale(.8).setOrigin(0).setScrollFactor(0);
+        this.add.image(0, 0, 'background').setOrigin(0).setScrollFactor(0);
 
-        let miniPlayer = this.add.image(20, 20, 'player').setScale(0.3).setOrigin(0).setScrollFactor(0);
-        this.scoreText = this.add.text(miniPlayer.x + 90, 28, this.scoreCounter, { font: '50px font1', fill: '#ffffff' }).setScrollFactor(0);
-        this.scoreTimer = this.add.text(this.width - 100, 20, ":"+this.timer, { font: '50px font1', fill: '#ffffff' }).setScrollFactor(0);
+        let miniPlayer = this.add.image(20, 110, 'player').setScale(0.3).setOrigin(0).setScrollFactor(0);
+        this.scoreText = this.add.text(miniPlayer.x + 90, 115, this.scoreCounter, { font: '50px LuckiestGuy', fill: '#ffffff' }).setScrollFactor(0);
+
+        this.add.image(this.width - 150, 65, 'time').setScale(1).setScrollFactor(0);
+        this.scoreTimer = this.add.text(this.width - 165, 43, "00:"+this.timer, { font: '30px LuckiestGuy', fill: '#833B1C' }).setScrollFactor(0);
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.player = this.physics.add.sprite(270, ((this.height/2) + 150), 'player').setScale(.5).setDepth(1).setSize(100, 130);    
-        this.singleJumpBtn = this.add.image((this.width/2) - 150, (this.height - 150), 'single-jump').setScale(.5).setInteractive().setScrollFactor(0).setDepth(1);
-        this.doubleJumpBtn = this.add.image((this.width/2) + 150, (this.height - 150), 'double-jump').setScale(.5).setInteractive().setScrollFactor(0).setDepth(1);
+        this.player.lives = 3;
+        this.singleJumpBtn = this.add.image((this.width/2) - 150, (this.height - 150), 'single-jump').setScale(1).setInteractive().setScrollFactor(0).setDepth(1);
+        this.doubleJumpBtn = this.add.image((this.width/2) + 150, (this.height - 150), 'double-jump').setScale(1).setInteractive().setScrollFactor(0).setDepth(1);
         this.setGrass();
         this.camera = this.cameras.main;
-        this.camera.startFollow(this.player, true, .05, .0000001, -(this.player.x + 80), 100);
+        this.camera.startFollow(this.player, true, .05, .0000001, -(this.player.x + 60), 100);
 
         this.jumpSound = this.sound.add('jump', { loop: false });
         this.fallSound = this.sound.add('fall', { loop: false });
@@ -99,12 +126,29 @@ export class MainScene extends Phaser.Scene {
 
     getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
-    } 
+    }
+    
+    getLives(){
+        let temp_heart;
+
+        this.lives.forEach((heart) => {
+            heart.destroy();
+        });
+
+        for (let i = 0; i < 3; i++){
+            if (this.player.lives > i){
+                temp_heart = this.add.image(50 + (i * 70), 65, 'heart').setScale(1).setScrollFactor(0);
+            }else {
+                temp_heart = this.add.image(50 + (i * 70), 65, 'heart_off').setScale(1).setScrollFactor(0);
+            }
+            this.lives.push(temp_heart);
+        }
+    }
 
     setTimer(){
         this.timeInterval = setInterval(() => {
             this.timer--;
-            if (this.timer < 10){ this.scoreTimer.setText(":0"+this.timer);}else {this.scoreTimer.setText(":"+this.timer);}
+            if (this.timer < 10){ this.scoreTimer.setText("00:0"+this.timer);}else {this.scoreTimer.setText("00:"+this.timer);}
             if(this.timer == 0){
                 clearInterval(this.timeInterval);
                 this.gameOver();
@@ -114,6 +158,10 @@ export class MainScene extends Phaser.Scene {
 
     setGrass(){
         let temp_grass; 
+
+        this.grass.forEach((grass) => {
+            grass.destroy();
+        });
 
         for (let i = 0; i < 50; i++){
             if (i == 0){
@@ -141,6 +189,17 @@ export class MainScene extends Phaser.Scene {
         let temp = arr[index1];
         arr[index1] = arr[index2];
         arr[index2] = temp;
+    }
+
+    resetGame(){
+        setTimeout(() => {
+            this.scoreCounter = 0;
+            this.scoreText.setText(this.scoreCounter);
+            this.player.x = 270;
+            this.player.y = ((this.height/2) + 150);
+            this.player.anims.play('jump', true);
+            this.setGrass();
+        }, 1000);        
     }
 
     gameOver(){

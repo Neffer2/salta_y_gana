@@ -12,9 +12,12 @@ export class PreloadScene extends Phaser.Scene {
 
         // Main scene
         this.load.image('grass-1', 'env/grass_1.png');
-        this.load.image('background', 'env/background_tall.png');
+        this.load.image('background', 'env/background_tall.jpg');
         this.load.image('single-jump', 'buttons/1jump.png');
         this.load.image('double-jump', 'buttons/2jump.png');
+        this.load.image('heart', 'items/heart.png');
+        this.load.image('heart_off', 'items/heart_off.png');
+        this.load.image('time', 'items/time.png');
         this.load.spritesheet('player', 'characters/capibara.png', { frameWidth: 183.75, frameHeight: 217.3 });  
 
         // Game Over
