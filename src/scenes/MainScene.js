@@ -193,8 +193,6 @@ export class MainScene extends Phaser.Scene {
 
     resetGame(){
         setTimeout(() => {
-            this.scoreCounter = 0;
-            this.scoreText.setText(this.scoreCounter);
             this.player.x = 270;
             this.player.y = ((this.height/2) + 150);
             this.player.anims.play('jump', true);
