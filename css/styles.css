@@ -30,19 +30,19 @@ canvas {
 
 @media (min-width: 540px) {
     body {
-        padding: 0 10%;
+        /* padding: 0 10%; */
     }
 }
 
 @media (min-width: 800px) {
     body {
-        padding: 0 20%;
+        /* padding: 0 20%; */
     }
 }
 
 @media (min-width: 1050px) {
     body {
-        padding: 0 37%;
+        /* padding: 0 37%; */
     }
 }
 
